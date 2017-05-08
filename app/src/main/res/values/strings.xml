@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AlarmProject</string>
+
+    <string name="alarm_default_name">Alarm</string>
+
+    <string name="alarm_save">Save</string>
+    <string name="alarm_delete">Delete</string>
+
+
+</resources>
