@@ -4,19 +4,29 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener{
+
+    private SensorManager sensorManager;
+    Sensor gyro = null;
+    boolean hasGyro = false;
 
     List<Alarm> alarms;
     ArrayList<PendingIntent> pendingIntents = new ArrayList<>();
@@ -27,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setupAlarmList();
         setupAlarms();
+
+        //Sensor setup
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        gyro = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if(gyro != null) hasGyro = true;
     }
 
     public void cancelPending(){
@@ -98,4 +113,25 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), AlarmEdit.class));
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float val = event.values[1];
+        TextView shit = (TextView)findViewById(R.id.values);
+        shit.setText(val+"");
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
 }

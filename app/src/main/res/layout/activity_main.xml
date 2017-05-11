@@ -29,5 +29,13 @@
             android:layout_alignParentEnd="true"
             android:onClick="alarm_add"/>
 
+    <TextView
+        android:id="@+id/values"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>
