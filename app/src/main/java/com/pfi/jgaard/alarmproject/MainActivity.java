@@ -20,6 +20,8 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -82,9 +84,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 if(sysTime > calTimeMs){continue;}
 
-                Intent alarmIntent = new Intent(this, AlarmBroadCastReciever.class);
-                alarmIntent.putExtra("currentAlarm", alarms.get(i));
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,  alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                Intent alarmIntent = new Intent(this, AlarmService.class);
+                Gson gson = new GsonBuilder().create();
+                alarmIntent.putExtra("currentAlarm", gson.toJson(alarms.get(i)));
+                PendingIntent pendingIntent = PendingIntent.getService(this, 0,  alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 final int SDK_INT = Build.VERSION.SDK_INT;
                 if (SDK_INT < Build.VERSION_CODES.KITKAT) {
                     am.set(AlarmManager.RTC_WAKEUP, calTimeMs, pendingIntent);
@@ -93,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     am.setExact(AlarmManager.RTC_WAKEUP, calTimeMs, pendingIntent);
                 }
                 else if (SDK_INT >= Build.VERSION_CODES.M) {
-                    am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calTimeMs, pendingIntent);
+                    am.setAlarmClock(new AlarmManager.AlarmClockInfo(calTimeMs, pendingIntent), pendingIntent);
                 }
                 pendingIntents.add(pendingIntent);
             }
