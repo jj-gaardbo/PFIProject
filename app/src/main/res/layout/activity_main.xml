@@ -12,12 +12,12 @@
         tools:context="com.pfi.jgaard.alarmproject.MainActivity">
 
     <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/alarm_list"/>
+        android:id="@+id/alarm_list"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
     <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
@@ -36,6 +36,15 @@
         android:text="TextView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:id="@+id/horseCont"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/alarm_list"
+        app:srcCompat="@mipmap/ic_horse1" />
 
 
 </RelativeLayout>

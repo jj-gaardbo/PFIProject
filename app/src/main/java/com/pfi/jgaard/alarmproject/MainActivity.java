@@ -4,10 +4,12 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
@@ -15,18 +17,26 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
+import static android.R.attr.max;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
     private SensorManager sensorManager;
     Sensor gyro = null;
     boolean hasGyro = false;
+    boolean changeHorse = false;
+
+    MediaPlayer mp;
 
     List<Alarm> alarms;
     ArrayList<PendingIntent> pendingIntents = new ArrayList<>();
@@ -37,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
         setupAlarmList();
         setupAlarms();
+        mp = MediaPlayer.create(this, R.raw.whinny);
 
         //Sensor setup
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -118,6 +129,37 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         float val = event.values[1];
         TextView shit = (TextView)findViewById(R.id.values);
         shit.setText(val+"");
+
+        if(val < 1) {
+            changeHorse();
+            changeHorse = false;
+        } else if(val > 6) {
+            changeHorse = true;
+        }
+    }
+
+    public void changeHorse() {
+        if(changeHorse) {
+            mp.start();
+            ImageView horseCont = (ImageView) findViewById(R.id.horseCont);
+            Random random = new Random();
+            int rand = random.nextInt((4 - 1) + 1) + 1;
+            switch (rand) {
+                case 1:
+                    horseCont.setImageResource(R.mipmap.ic_horse1);
+                    break;
+                case 2:
+                    horseCont.setImageResource(R.mipmap.ic_horse2);
+                    break;
+                case 3:
+                    horseCont.setImageResource(R.mipmap.ic_horse3);
+                    break;
+                case 4:
+                    horseCont.setImageResource(R.mipmap.ic_horse4);
+                    break;
+            }
+            changeHorse = false;
+        }
     }
 
     @Override
